@@ -1,0 +1,20 @@
+
+<form action="?action=saveAuth" method="post" id="save_auth" >
+    <div class="fields">
+        <div class="field">
+            <div class="name">Логин</div>
+            <div class="value"><input type="text" name="login" value="{$login|escape}"></div>
+        </div>
+        <div class="field">
+            <div class="name">Пароль</div>
+            <div class="value">
+                <input type="password" name="password" value="{$password|escape}">
+            </div>
+        </div>
+        <div class="field">
+            <div class="value">
+                <input type="submit" value="Сохранить" class="button green"><span class="response"></span>
+            </div>
+        </div>
+    </div>
+</form>

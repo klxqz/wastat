@@ -1,0 +1,134 @@
+<link rel="stylesheet" href="{$wa_url}wa-content/css/jquery-ui/base/jquery.ui.datepicker.css">
+<link rel="stylesheet" href="{$wa_url}wa-content/css/jquery-ui/base/jquery.ui.theme.css">
+{assign var=lang value=substr($wa->locale(), 0, 2)}
+<script type="text/javascript" src="{$wa_url}wa-content/js/jquery-ui/jquery.ui.datepicker.min.js"></script>
+{if $lang!='en'}
+<script type="text/javascript" src="{$wa_url}wa-content/js/jquery-ui/i18n/jquery.ui.datepicker-{$wa->locale()}.js"></script>
+{/if} 
+<script>
+    $(function() {
+        $(".datepicker").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    });
+</script>
+{if $products}
+<div calss="block">
+    <div class="display-table">
+        <div class="fields">
+            <div class="field">
+                <div class="name">Всего продуктов</div>
+                <div class="value">{count($products)}</div>
+            </div>
+            <div class="field">
+                <div class="name">Всего на сумму</div>
+                <div class="value">{$wa->wastat->priceFormat($wa->wastat->totalSum($date_from, $date_to))}</div>
+            </div>
+            <div class="field">
+                <div class="name">Всего транзакций</div>
+                <div class="value">{$wa->wastat->totalCount($date_from, $date_to)}</div>
+            </div>
+        </div>
+    </div>
+    <form action="#/productStatistic/" id="filter-form">
+        <div class="display-table">
+            <div class="fields">
+                <div class="field">
+                    <div class="name">Фильтр</div>
+                    <div class="value">
+                        От <input class="datepicker" name="date_from" type="text" value="{$date_from}"> 
+                        До <input class="datepicker" name="date_to" type="text" value="{$date_to}"></div>
+                </div>
+                <div class="field">
+                    <div class="name"></div>
+                    <div class="value">
+                        <input type="submit" value="Применить">
+                        <a href="#/productStatistic/reset_filter=1">Сбросить фильтр</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <table id="vp-table" class="zebra wa-tr-hover wa-nobreak-line">
+        <thead>
+            <tr>
+                <th class="min-width"></th>
+                <th>Название</th>
+                <th>
+                    Первая покупка
+                    <a href="#/productStatistic/sort=begin_date&order=asc"><i class="icon16 uarr"></i></a>
+                    <a href="#/productStatistic/sort=begin_date&order=desc"><i class="icon16 darr"></i></a>
+                </th>
+                <th>
+                    Последняя покупка
+                    <a href="#/productStatistic/sort=end_date&order=asc"><i class="icon16 uarr"></i></a>
+                    <a href="#/productStatistic/sort=end_date&order=desc"><i class="icon16 darr"></i></a>
+                </th>
+                <th>
+                    <span title="Коэффициент покупаемости. Количество купленных товаров деленное на количество дней в продаже">Покупаемость</span>
+                    <a href="#/productStatistic/sort=avg_date&order=asc"><i class="icon16 uarr"></i></a>
+                    <a href="#/productStatistic/sort=avg_date&order=desc"><i class="icon16 darr"></i></a>
+                </th>
+
+                <th class="align-right">
+                    Сумма
+                    <a href="#/productStatistic/sort=sum&order=asc"><i class="icon16 uarr"></i></a>
+                    <a href="#/productStatistic/sort=sum&order=desc"><i class="icon16 darr"></i></a>
+                </th>
+                <th class="align-right">
+                    Количество продаж
+                    <a href="#/productStatistic/sort=count&order=asc"><i class="icon16 uarr"></i></a>
+                    <a href="#/productStatistic/sort=count&order=desc"><i class="icon16 darr"></i></a>
+                </th>
+                <th class="align-right">
+                    <span title="Средняя цена за продукт по количеству продаж">Средняя цена</span>
+                    <a href="#/productStatistic/sort=avg&order=asc"><i class="icon16 uarr"></i></a>
+                    <a href="#/productStatistic/sort=avg&order=desc"><i class="icon16 darr"></i></a>
+                </th>
+
+                <th class="align-right">Версия</th>
+                <th>Статус</th>
+                <th class="align-right">Обновлено</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $products as $product}
+            <tr id="vp-{$product.wa_product_id}" style="">
+                <td>
+                    <i class="icon16 {$product.type}"></i>
+                </td>
+                <td>
+                    {$product.name|escape}
+                    <span class="hint">{$product.path_name|escape}</span>
+
+                </td>
+                <td>{$wa->wastat->dateFormat($product.begin_date)}</td>
+                <td>{$wa->wastat->dateFormat($product.end_date)}</td>
+                <td>{$product.avg_date}</td>
+                <td class="align-right">
+                    {$wa->wastat->priceFormat($product.sum)}
+                </td>
+                <td class="align-right">{$product.count}</td>
+                <td class="align-right">{$wa->wastat->priceFormat($product.avg)}</td>
+                <td class="align-right">{$product.version}</td>
+                <td>
+                    {if $product.status=='Черновик'}
+                    <span style="color:gray;">{$product.status}</span>
+                    {elseif $product.status=='Опубликован'}
+                    <span style="color:green;">{$product.status}</span>
+                    {elseif $product.status=='Ожидает'}
+                    <span style="color:blue;">{$product.status}</span>
+                    {elseif $product.status=='Отказано'}
+                    <span style="color:red;">{$product.status}</span>
+                    {/if}
+
+                </td>
+                <td class="align-right">{$wa->wastat->dateFormat($product.updated)}</td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</div>
+{/if}

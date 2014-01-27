@@ -1,0 +1,7 @@
+#wa-app{ padding: 10px}
+.content{ padding-left: 10px;}
+.display-table{ display: table;}
+
+table.zebra thead a{
+    display: inline-block;
+}

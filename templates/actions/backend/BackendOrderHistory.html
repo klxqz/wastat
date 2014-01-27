@@ -1,0 +1,21 @@
+{if $transactions}
+<table class="zebra">
+    <thead>
+        <tr><th>Дата</th><th>До</th><th>Сумма</th><th>После</th><th>Заказ</th><th>Комментарий</th></tr>
+    </thead>
+    <tbody>
+        {foreach $transactions as $transaction}
+        <tr class="log_row" style="color:{if $transaction.amount>0}green{else}red{/if};">
+            <td nowrap>{$wa->wastat->datetimeFormat($transaction.date)}</td>
+            <td class="num-right">{$transaction.before}</td>
+            <td class="num-right"><b>{$transaction.amount}</b></td>
+            <td class="num-right">{$transaction.after}</td>
+            <td>{$transaction.order_id}</td>
+            <td>{$transaction.comment}</td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>
+{else}
+Список пуст
+{/if}

@@ -1,0 +1,41 @@
+{if $products}
+<table id="vp-table" class="zebra wa-tr-hover wa-nobreak-line">
+    <thead>
+        <tr>
+            <th class="min-width"></th>
+            <th>Название</th>
+            <th class="align-right">Версия</th>
+            <th>Статус</th>
+            <th class="align-right">Обновлено</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $products as $product}
+        <tr id="vp-{$product.wa_product_id}" style="">
+            <td>
+                <i class="icon16 {$product.type}"></i>
+            </td>
+            <td>
+                {$product.name|escape}
+                <span class="hint">{$product.path_name|escape}</span>
+
+            </td>
+            <td class="align-right">{$product.version}</td>
+            <td>
+                {if $product.status=='Черновик'}
+                <span style="color:gray;">{$product.status}</span>
+                {elseif $product.status=='Опубликован'}
+                <span style="color:green;">{$product.status}</span>
+                {elseif $product.status=='Ожидает'}
+                <span style="color:blue;">{$product.status}</span>
+                {elseif $product.status=='Отказано'}
+                <span style="color:red;">{$product.status}</span>
+                {/if}
+
+            </td>
+            <td class="align-right">{$product.updated}</td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>
+{/if}
